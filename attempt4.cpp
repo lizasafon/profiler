@@ -4,6 +4,7 @@
 #include<stdlib.h>
 #include<ctime>
 #include<fstream>
+#include<cmath>
 
 float random_generator(int min, int max){
 	float n = float(min+rand()%(max-min)-1);
@@ -23,7 +24,9 @@ void find(std::set<float> s, float obj){
 } 
 
 
-
+double expected(double n){
+	return pow(10, -6)*(n*log(n*10)/50+10);
+}
 
 double time_test(unsigned N){
 	float* arr = new float[N];
@@ -39,6 +42,7 @@ double time_test(unsigned N){
 	auto end = std::chrono::steady_clock::now();
 
 	delete[] arr;
+
 	//delete[] s;
  
 	std::chrono::duration<double> time = end - start;
@@ -51,12 +55,13 @@ int main(){
 	out.open("file.txt"); // окрываем файл для записи
 	if (out.is_open()){
 		srand(time(NULL));
-	        for(unsigned num=1; num<30; num++){
+	        for(unsigned num=1; num<5000; num++){
 	        	double time = time_test(num);
-			out << "N = " << num << '\t' << "elapsed time: " << time << 's'  << std::endl; //запись
+			double expected_time = expected(static_cast<double>(num));
+			out << num << '\t' << time << '\t' << expected_time << std::endl; //запись
 		}
 	}
-	     
+	out.close();
 	std::cout << "End of program" << std::endl;
 	return 0;
 	
