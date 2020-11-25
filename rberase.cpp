@@ -17,11 +17,11 @@ int random_generator(int min, int max)
     return n;
 }
 
-void insert(RedBlackTree &s, int obj){
+void erase(RedBlackTree &s, int obj){
 	s.insert(obj);
 }
 // set
-void insert_set(std::set<int> &s, int obj){
+void erase_set(std::set<int> &s, int obj){
 	s.insert(obj);
 }
 
@@ -35,14 +35,16 @@ void insert_set(std::set<int> &s, int obj){
 
 double time_test(unsigned N){
 	std::vector<int> arr;
-	for(int i=0; i<N; i++){
-		arr.push_back(random_generator(-N, N));
-	}	
 	RedBlackTree  s;
 
+	for(int i=0; i<N; i++){
+		arr.push_back(random_generator(-N, N));
+		s.insert(arr[i]);
+	}	
+	
 	auto start = std::chrono::steady_clock::now();
 	for(int i=0; i<N; i++){
-		insert(s, arr[i]);// здесь будет одна из трех функций выше
+		erase(s, arr[i]);// здесь будет одна из трех функций выше
 	}
 	auto end = std::chrono::steady_clock::now();
 
@@ -57,14 +59,16 @@ double time_test(unsigned N){
 
 double time_test_set(unsigned N){
 	std::vector<int> arr;
+	std::set<int>  s;
 	for(int i=0; i<N; i++){
 		arr.push_back(random_generator(-N, N));
+		s.insert(arr[i]);
 	}	
-	std::set<int>  s;
+	
 
 	auto start = std::chrono::steady_clock::now();
 	for(int i=0; i<N; i++){
-		insert_set(s, arr[i]);// здесь будет одна из трех функций выше
+		erase_set(s, arr[i]);// здесь будет одна из трех функций выше
 	}
 	auto end = std::chrono::steady_clock::now();
 
@@ -80,8 +84,8 @@ int main(){
 	out.open("file.txt"); // окрываем файл для записи
 	if (out.is_open()){
 		srand(time(NULL));
-	        for(unsigned num=1; num<10000; num+=10){
-
+	        for(unsigned num=10; num<1000000; num=int(float(num)*1.2)){
+			std::cout << num <<'\n';
 	        	double time = time_test(num)/num;
 			double expected_time = time_test_set(num)/num;
 			out << num << '\t' << time << '\t' << expected_time << std::endl; //запись
