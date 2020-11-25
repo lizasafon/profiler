@@ -5,6 +5,7 @@
 #include<ctime>
 #include<fstream>
 #include<cmath>
+//#include"tree.cpp"
 
 float random_generator(int min, int max){
 	float n = float(min+rand()%(max-min)-1);
@@ -13,13 +14,13 @@ float random_generator(int min, int max){
 }
 
 
-void insert(std::set<float> s, float obj){
+void insert(std::set<float> &s, float obj){
 	s.insert(obj);
 }
-void erase(std::set<float> s, float obj){
+void erase(std::set<float> &s, float obj){
 	s.erase(obj);
 }
-void find(std::set<float> s, float obj){
+void find(std::set<float> &s, float obj){
 	auto it = s.find(obj);
 } 
 
@@ -55,7 +56,9 @@ int main(){
 	out.open("file.txt"); // окрываем файл для записи
 	if (out.is_open()){
 		srand(time(NULL));
-	        for(unsigned num=1; num<5000; num++){
+	        for(unsigned num=1; num<10000; num+=10){
+			if(num%1000==1)
+				std::cout<< 100*float(num)/10000 <<"%";
 	        	double time = time_test(num);
 			double expected_time = expected(static_cast<double>(num));
 			out << num << '\t' << time << '\t' << expected_time << std::endl; //запись
