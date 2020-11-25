@@ -18,11 +18,11 @@ int random_generator(int min, int max)
 }
 
 void erase(RedBlackTree &s, int obj){
-	s.insert(obj);
+	s.erase(obj);
 }
 // set
 void erase_set(std::set<int> &s, int obj){
-	s.insert(obj);
+	s.erase(obj);
 }
 
 
