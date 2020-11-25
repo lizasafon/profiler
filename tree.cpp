@@ -117,7 +117,7 @@ class BinSearchTree {
             }
         }
 
-        void erase(numb, point) {
+        void erase(int numb, uzel* point) {
             if (point == NULL) {
                 return;
             }
