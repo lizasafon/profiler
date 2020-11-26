@@ -1,0 +1,49 @@
+#include<iostream>
+
+using namespace std;
+
+struct uzel {
+    int key;
+    uzel* left;
+    uzel* right;
+    uzel* parent;
+    bool color; //true - RED, false - BLACK
+    int height=1;
+    uzel(int k) {
+        key = k;
+        left = right = parent = NULL;
+        height = 1;
+        color=false;
+    }
+
+};
+class BinSearchTree {
+    public:
+        uzel* start;
+        BinSearchTree() {
+            start = NULL;
+        }
+        virtual void insert(int numb) = 0;
+        virtual void erase(int numb) = 0;
+        uzel* find(int numb) {
+            return find(numb, start);
+        }
+  //  protected:
+        uzel* find(int numb, uzel* point) {
+            if (point != NULL) {
+                if (numb == point->key) {
+                    return point;
+                }
+                else if (numb < point->key) {
+                    return find(numb, point->left);
+                }
+                else if (numb > point->key) {
+                    return find(numb, point->right);
+                }
+                else {
+                    return NULL;
+                }
+            }
+        }
+
+};
