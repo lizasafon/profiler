@@ -2,14 +2,141 @@
 #include "tree.cpp"
 using namespace std;
 
+uzel* grandparent(uzel* point) {
+    if ((point != NULL) && (point->parent != NULL)) {
+        return point->parent->parent;
+    }
+    else {
+        return NULL;
+    }
+}
+
+uzel* uncle(uzel* point) {
+    uzel* g = grandparent(point);
+    if (g == NULL) {
+        return NULL;
+    }
+    if (point->parent == g->left) {
+        return g->right;
+    }
+    else {
+        return g->left;
+    }
+}
+
+uzel* brother(uzel* point) {
+    if (point == point->parent->left) {
+        return point->parent->right;
+    }
+    else {
+        return point->parent->left;
+    }
+}
+
 class RedBlackTree : public BinSearchTree {
+    public:
+        void insert(int numb) {
+            if (start != NULL) {
+                insert_it(numb, start);
+            }
+            else {
+                start = new uzel(numb);
+            }
+        }
+        void erase(int numb) {
+            erase_it(numb, start);
+        }
     private:
+//insert function
+        void insert_it(int numb, uzel* point) {
+            if (numb < point->key) {
+                if (point->left != NULL) {
+                    insert_it(numb, point->left);
+                }
+                else {
+                    point->left = new uzel(numb);
+                    point->left->parent = point;
+                    point->left->color = true;
+                    balance_insert(point->left);
+                }
+            }
+            else if (numb >= point->key) {
+                if (point->right != NULL) {
+                    insert_it(numb, point->right);
+                }
+                else {
+                    point->right = new uzel(numb);
+                    point->right->parent = point;
+                    point->right->color = true;
+                    balance_insert(point->right);
+                }
+            }
+        }
+//erase function
+        void erase_it(int numb, uzel* point) {
+            if (point == NULL) {
+                return;
+            }
+            else {
+                if (numb < point->key) {
+                    erase_it(numb, point->left);
+                }
+                else if (numb > point->key) {
+                    erase_it(numb, point->right);
+                }
+                else if (numb == point->key) {
+                    if ((point->left == NULL) && (point->right == NULL)) {
+                        if (point->parent->left == point) {
+                            point->parent->left = NULL;
+                        }
+                        else {
+                            point->parent->right = NULL;
+                        }
+                        uzel* u = point->parent;
+                        delete point;
+                        balance_delete(u);
+                    }
+                    else if ((point->left == NULL) && (point->right != NULL)) {
+                        point->left = point->right->left;
+                        point->right = point->right->right;
+                        point->key = point->right->key;
+                        point->right->left->parent = point;
+                        point->right->right->parent = point;
+                        delete point->right;
+                        balance_delete(point);
+                    }
+                    else if ((point->left != NULL) && (point->right == NULL)) {
+                        point->left = point->left->left;
+                        point->right = point->left->right;
+                        point->key = point->left->key;
+                        point->left->left->parent = point;
+                        point->left->right->parent = point;
+                        delete point->left;
+                        balance_delete(point);
+                    }
+                    else {
+                        uzel* u = find_min(point->right);
+                        point->key = u->key;
+                        erase_it(u->key, u);
+                    }
+                }
+            }
+        }
 //balance functions
         void balance_insert(uzel* point) {
             insert_1(point);
         }
         void balance_delete(uzel* point) {
             delete_1(point);
+        }
+//find minimum
+        uzel* find_min(uzel* point) {
+            if (point->left == NULL) {
+                return point;
+            }
+            else {
+                find_min(point->left);
+            }
         }
 //tree turns
         void turn_left(uzel* point) {
