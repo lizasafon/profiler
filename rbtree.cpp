@@ -34,12 +34,24 @@ uzel* brother(uzel* point) {
 }
 
 class RedBlackTree : public BinSearchTree {
+    public:
+        void insert(int numb) {
+            if (start != NULL) {
+                insert_it(numb, start);
+            }
+            else {
+                start = new uzel(numb);
+            }
+        }
+        void erase(int numb) {
+            erase_it(numb, start);
+        }
     private:
 //insert function
-        void insert(int numb, uzel* point) {
+        void insert_it(int numb, uzel* point) {
             if (numb < point->key) {
                 if (point->left != NULL) {
-                    insert(numb, point->left);
+                    insert_it(numb, point->left);
                 }
                 else {
                     point->left = new uzel(numb);
@@ -50,7 +62,7 @@ class RedBlackTree : public BinSearchTree {
             }
             else if (numb >= point->key) {
                 if (point->right != NULL) {
-                    insert(numb, point->right);
+                    insert_it(numb, point->right);
                 }
                 else {
                     point->right = new uzel(numb);
@@ -61,16 +73,16 @@ class RedBlackTree : public BinSearchTree {
             }
         }
 //erase function
-        void erase(int numb, uzel* point) {
+        void erase_it(int numb, uzel* point) {
             if (point == NULL) {
                 return;
             }
             else {
                 if (numb < point->key) {
-                    erase(numb, point->left);
+                    erase_it(numb, point->left);
                 }
                 else if (numb > point->key) {
-                    erase(numb, point->right);
+                    erase_it(numb, point->right);
                 }
                 else if (numb == point->key) {
                     if ((point->left == NULL) && (point->right == NULL)) {
@@ -105,7 +117,7 @@ class RedBlackTree : public BinSearchTree {
                     else {
                         uzel* u = find_min(point->right);
                         point->key = u->key;
-                        erase(u->key, u);
+                        erase_it(u->key, u);
                     }
                 }
             }

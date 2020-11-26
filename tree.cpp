@@ -15,17 +15,8 @@ class BinSearchTree {
     public:
         uzel* start;
         BinSearchTree() {start = NULL;}
-        void insert(int numb) {
-            if (start != NULL) {
-                insert(numb, start);
-            }
-            else {
-                start = new uzel(numb);
-            }
-        }
-        void erase(int numb) {
-            erase(numb, start);
-        }
+        virtual void insert(int numb) = 0;
+        virtual void erase(int numb) = 0;
         uzel* find(int numb) {
             return find(numb, start);
         }
@@ -46,6 +37,4 @@ class BinSearchTree {
                 }
             }
         }
-        virtual void insert(int numb, uzel* point);
-        virtual void erase(int numb, uzel* point);
 };
