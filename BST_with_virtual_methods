@@ -28,7 +28,7 @@ class BinSearchTree {
         uzel* find(int numb) {
             return find(numb, start);
         }
-  //  protected:
+    protected:
         uzel* find(int numb, uzel* point) {
             if (point != NULL) {
                 if (numb == point->key) {
@@ -44,6 +44,7 @@ class BinSearchTree {
                     return NULL;
                 }
             }
-        }
+            else return NULL;
+        }        
 
 };
