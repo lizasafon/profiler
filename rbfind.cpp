@@ -7,7 +7,7 @@
 #include<cmath>
 #include<random>
 #include<vector>
-#include"rbtree.cpp"
+#include"rbtree.h"
 
 int random_generator(int min, int max)
 {
@@ -17,13 +17,7 @@ int random_generator(int min, int max)
     return n;
 }
 
-void erase(RedBlackTree &s, int obj){
-	s.erase(obj);
-}
-// set
-void erase_set(std::set<int> &s, int obj){
-	s.insert(obj);
-}
+
 
 
 
@@ -35,7 +29,7 @@ void erase_set(std::set<int> &s, int obj){
 
 double time_test(unsigned N){
 	std::vector<int> arr;
-	RedBlackTree  s;
+	RedBlackTree<int>  s;
 
 	for(int i=0; i<N; i++){
 		arr.push_back(random_generator(-N, N));
@@ -44,7 +38,7 @@ double time_test(unsigned N){
 	
 	auto start = std::chrono::steady_clock::now();
 	for(int i=0; i<N; i++){
-		erase(s, arr[i]);// здесь будет одна из трех функций выше
+		s.find(arr[i]);// здесь будет одна из трех функций выше
 	}
 	auto end = std::chrono::steady_clock::now();
 
@@ -68,7 +62,7 @@ double time_test_set(unsigned N){
 
 	auto start = std::chrono::steady_clock::now();
 	for(int i=0; i<N; i++){
-		erase_set(s, arr[i]);// здесь будет одна из трех функций выше
+		s.find(arr[i]);// здесь будет одна из трех функций выше
 	}
 	auto end = std::chrono::steady_clock::now();
 

@@ -7,7 +7,7 @@
 #include<cmath>
 #include<random>
 #include<vector>
-#include"rbtree.cpp"
+#include"rbtree.h"
 
 int random_generator(int min, int max)
 {
@@ -17,7 +17,7 @@ int random_generator(int min, int max)
     return n;
 }
 
-void insert(RedBlackTree &s, int obj){
+void insert(RedBlackTree<int> &s, int obj){
 	s.insert(obj);
 }
 // set
@@ -38,7 +38,7 @@ double time_test(unsigned N){
 	for(int i=0; i<N; i++){
 		arr.push_back(random_generator(-N, N));
 	}	
-	RedBlackTree  s;
+	RedBlackTree<int>  s;
 
 	auto start = std::chrono::steady_clock::now();
 	for(int i=0; i<N; i++){
@@ -80,12 +80,13 @@ int main(){
 	out.open("file.txt"); // окрываем файл для записи
 	if (out.is_open()){
 		srand(time(NULL));
-	        for(unsigned num=1; num<10000; num+=10){
-
+	        for(unsigned num=10; num<1000000; num=int(float(num)*1.2)){
+			std::cout << num << std::endl;
 	        	double time = time_test(num)/num;
+			
 			double expected_time = time_test_set(num)/num;
 			out << num << '\t' << time << '\t' << expected_time << std::endl; //запись
-			//out << num << '\t' << time << std::endl;
+			
 		}
 	}
 	out.close();
