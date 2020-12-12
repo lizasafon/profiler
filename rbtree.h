@@ -124,58 +124,76 @@ class RedBlackTree {
         }
 //erase function
         void erase_it(uzel<Type>* point) {
-            uzel<Type>* x;
-            uzel<Type>* y;
             if (point == NULL) {
                 return;
             }
-            if ((point->left == NULL) || (point->right == NULL)) {
-                    y = point;
-                }
-            else {
-                y = find_min(point->right);
-            }
-            if (!((point->left == NULL) && (point->right == NULL))) {
-                if (y->left != NULL) {
-                    x = y->left;
-                }
-                else {
-                    x = y->right;
-                }
-                x->parent = y->parent;
-                if (y->parent != NULL) {
-                    if (y == y->parent->left) {
-                        y->parent->left = x;
+            if ((point->left == NULL) && (point->right == NULL)) {
+                if (point->parent != NULL) {
+                    if (point == point->parent->left) {
+                        point->parent->left = NULL;
                     }
                     else {
-                        y->parent->right = x;
+                        point->parent->right = NULL;
                     }
+                    if (point->color == false) {
+                        balance_delete(point->parent);
+                    }
+                    //delete point;
                 }
                 else {
-                    start = x;
-                }
-                if (y != point) {
-                    point->key = y->key;
-                }
-                if (y->color == false) {
-                    balance_delete(x);
-                }
-                delete y;
-            }
-            else {
-                if (y->parent != NULL) {
-                    x = y->parent;
-                    if (y == x->left) {
-                        x->left = NULL;
-                    }
-                    else {
-                        x->right = NULL;
-                    }
-                }
-                else {
-                    delete y;
+                    //delete point;
                     start = NULL;
                 }
+            }
+            if ((point->left != NULL) && (point->right == NULL)) {
+                if (point->parent != NULL) {
+                    if (point == point->parent->left) {
+                        point->parent->left = point->left;
+                    }
+                    else {
+                        point->parent->right = point->left;
+                    }
+                    point->left->parent = point->parent;
+                    if (point->color == false) {
+                        balance_delete(point->left);
+                    }
+                    //delete point;
+                }
+                else {
+                    start = point->left;
+                    point->left->parent = NULL;
+                    if (point->color == false) {
+                        balance_delete(point->left);
+                    }
+                    //delete point;
+                }
+            }
+            if ((point->left == NULL) && (point->right != NULL)) {
+                if (point->parent != NULL) {
+                    if (point == point->parent->right) {
+                        point->parent->right = point->right;
+                    }
+                    else {
+                        point->parent->left = point->right;
+                    }
+                    point->right->parent = point->parent;
+                    if (point->color == false) {
+                        balance_delete(point->right);
+                    }
+                    //delete point;
+                }
+                else {
+                    start = point->right;
+                    point->right->parent = NULL;
+                    if (point->color == false) {
+                        balance_delete(point->right);
+                    }
+                    //delete point;
+                }
+            }
+            if ((point->left != NULL) && (point->right != NULL)) {
+                point->key = find_min(point->right)->key;
+                erase_it(find_min(point->right));
             }
         }
 //balance functions
