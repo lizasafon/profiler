@@ -2,7 +2,8 @@
 using namespace std;
 
 template <class Type>
-struct uzel {
+class uzel {
+  public:
     Type key;
     uzel<Type>* left;
     uzel<Type>* right;
@@ -28,6 +29,17 @@ class AVL_BinSearchTree {
     }
     uzel<Type>* find(Type numb) {
         return find(numb, start);
+    }
+
+    void makeEmpty(uzel<Type>* t) {
+        if(t == NULL) return;
+        makeEmpty(t->left);
+        makeEmpty(t->right);
+        delete t;
+    }
+    void display() {
+        inorder(start);
+        cout << endl;
     }
 
   protected:
@@ -131,58 +143,63 @@ class AVL_BinSearchTree {
         else
             return findMax(t->right);
     }
-    uzel<Type>* erase(Type x, uzel<Type>* t)
-    {
-        uzel<Type>* temp;
-        if(t == NULL)
-            return NULL;
 
-        else if(x < t->key)
-            t->left = erase(x, t->left);
-        else if(x > t->key)
-            t->right = erase(x, t->right);
-
-        else if(t->left && t->right)
-        {
-            temp = findMin(t->right);
-            t->key = temp->key;
-            t->right = erase(t->key, t->right);
-        }
-        else
-        {
-            temp = t;
-            if(t->left == NULL)
-                t = t->right;
-            else if(t->right == NULL)
-                t = t->left;
-            delete temp;
-        }
-        if(t == NULL)
+    uzel<Type>* erase(Type x, uzel<Type>* t) {
+            if(t==NULL) return NULL;
+            if(x < t->key){
+                t->left = erase(x, t->left);
+            }
+            else if(x > t->key) {
+                t->right = erase(x, t->right);
+            }
+            else {
+                uzel<Type>* r = t->right;
+                if(t->right==NULL){
+                    uzel<Type>* l = t->left;
+                    delete(t);
+                    t = l;
+                }
+                else if(t->left==NULL){
+                    delete(t);
+                    t = r;
+                }
+                else {
+                    while(r->left!=NULL) r = r->left;
+                    t->key = r->key;
+                    t->right = erase(r->key, t->right);
+                }
+            }
+            if(t==NULL) return t;
+            t->height = 1 + max(height(t->left), height(t->right));
+            int balanse_factor = height(t->left) - height(t->right);
+            if(balanse_factor>1) {
+                if(x > t->left->key) {
+                    return singleRightRotate(t);
+                }
+                else {
+                    t->left = singleLeftRotate(t->left);
+                    return singleRightRotate(t);
+                }
+            }
+            else if (balanse_factor < -1) {
+                if(x < t->right->key){
+                    return singleLeftRotate(t);
+                }
+                else {
+                    t->right = singleRightRotate(t->right);
+                    return singleLeftRotate(t);
+                }
+            }
             return t;
-
-        t->height = max(height(t->left), height(t->right))+1;
-        if(height(t->left) - height(t->right) == 2)
-        {
-            if(height(t->left->left) - height(t->left->right) == 1)
-                return singleLeftRotate(t);
-
-            else
-                return doubleLeftRotate(t);
         }
-        else if(height(t->right) - height(t->left) == 2)
-        {
-            if(height(t->right->right) - height(t->right->left) == 1)
-                return singleRightRotate(t);
 
-            else
-                return doubleRightRotate(t);
-        }
-        return t;
-    }
+
+
     int height(uzel<Type>* t)
     {
         return (t == NULL ? -1 : t->height);
     }
+
     int getBalance(uzel<Type>* t)
     {
         if(t == NULL)
@@ -190,4 +207,14 @@ class AVL_BinSearchTree {
         else
             return height(t->left) - height(t->right);
     }
+
+    void inorder(uzel<Type>* t)
+    {
+        if(t != NULL) {
+            inorder(t->left);
+            cout << t->key << " ";
+            inorder(t->right);
+        }
+    }
+
 };
